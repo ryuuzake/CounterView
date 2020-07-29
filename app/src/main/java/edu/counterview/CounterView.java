@@ -18,6 +18,7 @@ public class CounterView extends LinearLayout implements View.OnClickListener {
     private Button decButton;
     private LinearLayout rootView;
     private CounterListner listener;
+    private int baseCounterValue;
 
 
     public CounterView(Context context) {
@@ -46,6 +47,7 @@ public class CounterView extends LinearLayout implements View.OnClickListener {
         this.incButton.setOnClickListener(this);
         this.decButton.setOnClickListener(this);
 
+        baseCounterValue = 0;
     }
 
 
@@ -58,6 +60,20 @@ public class CounterView extends LinearLayout implements View.OnClickListener {
     public CounterView setStartCounterValue(@StringRes int startValue) {
         if (this.itemCounterValue != null)
             this.itemCounterValue.setText(getString(startValue));
+        return this;
+    }
+
+    public CounterView setBaseCounterValue(String baseCounterValue) {
+        this.baseCounterValue = Integer.parseInt(baseCounterValue);
+        if (this.itemCounterValue != null)
+            this.itemCounterValue.setText(baseCounterValue);
+        return this;
+    }
+
+    public CounterView setBaseCounterValue(@StringRes int baseCounterValue) {
+        this.baseCounterValue = baseCounterValue;
+        if (this.itemCounterValue != null)
+            this.itemCounterValue.setText(getString(baseCounterValue));
         return this;
     }
 
@@ -91,8 +107,7 @@ public class CounterView extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int value = 0;
-        value = Integer.parseInt(this.itemCounterValue.getText().toString());
+        int value = Integer.parseInt(this.itemCounterValue.getText().toString());
         int i = view.getId();
         if (i == R.id.inc_button) {
             value++;
@@ -101,8 +116,8 @@ public class CounterView extends LinearLayout implements View.OnClickListener {
                 this.listener.onIncClick(this.itemCounterValue.getText().toString());
         } else if (i == R.id.dec_button) {
             value--;
-            if (value < 1) {
-                value = 1;
+            if (value < baseCounterValue) {
+                value = baseCounterValue;
             }
             this.itemCounterValue.setText(String.valueOf(value));
             if (this.listener != null)
